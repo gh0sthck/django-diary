@@ -7,25 +7,24 @@ from django.views.generic.edit import UpdateView, CreateView
 
 from notes.forms import NoteForm
 from notes.models import Note
+from notes.utils import authenticate_required
 
 
 class AllUserNotes(View):
+    @authenticate_required
     def get(self, request: HttpRequest):
-        if request.user.is_authenticated:
-            user_id: int = request.user.id
-            user_notes = Note.objects.filter(author=user_id).select_related("author") 
-            return render(request, "notes_all.html", {"notes": user_notes}) 
-        return redirect("auth")
+        user_id: int = request.user.id
+        user_notes = Note.objects.filter(author=user_id).select_related("author") 
+        return render(request, "notes_all.html", {"notes": user_notes}) 
 
 
 class CurrentNote(View):
+    @authenticate_required
     def get(self, request: HttpRequest, slug: str):
-        if request.user.is_authenticated:
-            note = Note.objects.get(slug=slug)
-            if note.author == request.user:
-                return render(request, "notes_current.html", {"note": note})
-            return redirect("all_notes")
-        return redirect("auth")
+        note = Note.objects.get(slug=slug)
+        if note.author == request.user:
+            return render(request, "notes_current.html", {"note": note})
+        return redirect("all_notes")
     
 
 class EditNote(UpdateView):
@@ -40,15 +39,14 @@ class CreateNote(CreateView):
     fields = ["title", "text"] 
     template_name = "notes_edit.html"
 
+    @authenticate_required
     def post(self, request: HttpRequest):
-        if request.user.is_authenticated: 
-            form = NoteForm(request.POST)
-            if form.is_valid():
-                data = form.save(commit=False)
-                data.author = request.user
-                data.save() 
-                return redirect("all_notes")
-        return redirect("auth")
+        form = NoteForm(request.POST)
+        if form.is_valid():
+            data = form.save(commit=False)
+            data.author = request.user
+            data.save() 
+            return redirect("all_notes")
 
 
 class DeleteNote(DeleteView):
@@ -57,10 +55,9 @@ class DeleteNote(DeleteView):
     template_name = "note_delete.html"
     context_object_name = "note"
 
+    @authenticate_required
     def post(self, request: HttpRequest, *args, **kwargs):
-        if request.user.is_authenticated: 
-            author = self.get_object().author
-            if request.user == author:
-                return super().post(request, *args, **kwargs)
-            return redirect("all_notes")
-        return redirect("auth")
+        author = self.get_object().author
+        if request.user == author:
+            return super().post(request, *args, **kwargs)
+        return redirect("all_notes")
