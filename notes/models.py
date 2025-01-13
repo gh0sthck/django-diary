@@ -1,18 +1,25 @@
 from django.db import models
 from django.urls import reverse
+from pytils.translit import slugify
 
 from users.models import DiaryUser
 
 
 class Note(models.Model):
     title = models.CharField(verbose_name="Заголовок", max_length=80, null=False)
+    slug = models.SlugField(verbose_name="Слаг", max_length=128, unique=True)
     create_date = models.DateTimeField(verbose_name="Дата создания", auto_now_add=True) 
     text = models.TextField(verbose_name="Текст записи", null=True, blank=True)
     update_date = models.DateTimeField(verbose_name="Время обновления", auto_now=True)
     author = models.ForeignKey(DiaryUser, on_delete=models.CASCADE, verbose_name="Автор")
   
     def get_absolute_url(self):
-        return reverse("model_detail", kwargs={"pk": self.pk})
+        return reverse("current_note", kwargs={"slug": self.slug})
+    
+    def save(self, *args, **kwargs):
+        # if not self.slug:
+        self.slug = slugify(self.title)
+        return super().save(*args, **kwargs) 
      
     def __str__(self):
         return self.title

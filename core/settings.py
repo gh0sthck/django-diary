@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 
+from django.conf.global_settings import STATICFILES_DIRS
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -119,10 +121,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / STATIC_URL
+STATICFILES_DIRS = [BASE_DIR / STATIC_URL]
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / MEDIA_URL
+MEDIAFILES_DIRS = [MEDIA_ROOT]
 
 AUTH_USER_MODEL = "users.DiaryUser"
 

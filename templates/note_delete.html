@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}
+Удалить {{ note.title }}
+{% endblock title %}
+
+{% block main %}
+<p>Вы уверены, что хотите удалить запись "{{ note.title}}"?</p>
+<p>Имейте ввиду, что удаленные записи не подлежат восстановлению.</p>
+<form method="post">
+    {% csrf_token %}
+    <input type="submit" value="Удалить">
+</form>
+{% endblock main %}

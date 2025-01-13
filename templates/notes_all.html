@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}
+Записи
+{% endblock title %}
+
+{% block main %}
+
+<h1 class="title">Ваши записи, {{ user.username }}</h1>
+<a href="{% url "create_note" %}">Создать запись</a>
+
+<div class="notes">
+    {% for note in notes %}
+        <div class="note">
+            <h2 class="note__title"><a href="{% url "current_note" note.slug %}">{{ note.title }}</a></h2>
+            <p class="note__description">{{ note.text|truncatechars:"40" }}</p>
+        </div> 
+    {% endfor %}
+</div>
+
+{% endblock main %}
