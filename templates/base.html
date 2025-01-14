@@ -4,35 +4,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="{% static "bootstrap/bootstrap-reboot.min.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "bootstrap/bootstrap.min.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}" />
     <title>{% block title %}{% endblock title %}</title>
   </head>
   <body>
     <header class="header">
-      <div class="container">
+      <div class="container-md">
         <nav class="header__nav">
           <ul class="nav__list">
             {% if user.is_authenticated %}
-                <li class="nav__item"><a href="{% url "all_notes" %}">{{ user.username }}</a></li>
-                <li class="nav__item"><a href="{% url "profile_settings" %}">Настройки</a></li>
+                <li class="nav__item"><a class="btn btn-outline-purple" href="{% url "all_notes" %}">{{ user.username }}</a></li>
+                <li class="nav__item"><a class="btn btn-outline-purple" href="{% url "profile_settings" %}">Настройки</a></li>
                 <li class="nav__item">
                     <form method="post" action={% url "logout" %}>
                         {% csrf_token %}
-                        <input type="submit" value="Выход" />
+                        <button class="btn btn-outline-danger" type="submit">Выход</button>
                     </form> 
                 </li>
             {% else %}
-                <li class="nav__item"><a href="{% url "login" %}">Вход</a></li>
+                <li class="nav__item"><a class="btn btn-outline-purple" href="{% url "login" %}">Вход</a></li>
             {% endif %}
           </ul>
         </nav>
       </div>
     </header>
     <main class="main">
-      <div class="container">{% block main %}{% endblock main %}</div>
+      <div class="container-md">{% block main %}{% endblock main %}</div>
     </main>
     <footer class="footer">
-      <div class="container"></div>
+      <div class="container-md"></div>
     </footer>
   </body>
 </html>

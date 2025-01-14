@@ -7,14 +7,18 @@
 {% block main %}
 
 <h1 class="title">Ваши записи, {{ user.username }}</h1>
-<a href="{% url "create_note" %}">Создать запись</a>
-
+<div class="d-grid gap-1">
+    <a class="btn btn-purple" href="{% url "create_note" %}">Создать запись</a>
+</div>
 <div class="notes">
     {% for note in notes %}
+        <a class="note__link" href="{% url "current_note" note.slug %}">
         <div class="note">
-            <h2 class="note__title"><a href="{% url "current_note" note.slug %}">{{ note.title }}</a></h2>
+            <h3 class="note__title">{{ note.title }}</h3>
+            <p>{{ note.create_date }}</p>
             <p class="note__description">{{ note.text|truncatechars:"40" }}</p>
         </div> 
+            </a>
     {% endfor %}
 </div>
 

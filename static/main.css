@@ -1,13 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap');
+
 * {
-    outline: none;
-    text-decoration: none;
     list-style: none;
     list-style-type: none;
     padding: 0;
     margin: 0;
-    box-sizing: border-box;
     border: none;
-    font-size: 16px;
-    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    color: #1d1d1d;
+    font-family: "Roboto Slab", serif;
+    font-size: 19px;
+}
 
+.btn-purple {
+    border: 1px solid none;
+    background-color: #9379c4 ;
+    color: #fff;
+}
+
+.btn-purple:hover {
+    border: 1px solid #9379c4;
+    background: none;
+    color: #9379c4;
+}
+
+.btn-outline-purple {
+    border: 1px solid #9379c4;
+    background: none;
+    color: #9379c4;
+}
+
+.btn-outline-purple:hover {
+    border: 1px solid none;
+    background-color: #9379c4;
+    color: #fff;
+}
+
+.header {
+    width: 100%;
+    height: 90px;
+    background-color: #f3f3f3;
+    margin-bottom: 30px;
+}
+
+.header .nav__list {
+    height: 90px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.note__link {
+    max-width: 900px;
+    display: block;
+    margin-top: 30px;
+    text-decoration: none;
+}
+
+.note {
+    background-color: #f3f3f3;
+    border-radius: 30px;
+    padding: 30px;
+}
+
+
+.note__description {
+    font-weight: 300;
+    font-style: italic;
+}
+
+.note:hover {
+    background-color: #c1b2d8 ;
+    transition: .3s;
 }
