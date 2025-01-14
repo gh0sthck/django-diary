@@ -13,7 +13,8 @@
         <nav class="header__nav">
           <ul class="nav__list">
             {% if user.is_authenticated %}
-                <li class="nav__item"><a href="#">{{ user.username }}</a></li>
+                <li class="nav__item"><a href="{% url "all_notes" %}">{{ user.username }}</a></li>
+                <li class="nav__item"><a href="{% url "profile_settings" %}">Настройки</a></li>
                 <li class="nav__item">
                     <form method="post" action={% url "logout" %}>
                         {% csrf_token %}
