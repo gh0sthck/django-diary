@@ -7,7 +7,11 @@
 {% block main %}
 <h1>{{ note.title }}</h1>
 
-<p>{{ note.text }}</p>
+<div class="current_note__description">
+    
+    {{ note.text_as_markdown }}
+
+</div>
 
 <a href="{% url "edit_note" note.slug %}">Редактировать</a>
 <a href="{% url "delete_note" note.slug %}">Удалить</a>

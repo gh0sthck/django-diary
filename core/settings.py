@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 
-from django.conf.global_settings import LOGIN_REDIRECT_URL, LOGOUT_REDIRECT_URL, STATICFILES_DIRS
+from django.conf.global_settings import LOGIN_REDIRECT_URL, LOGOUT_REDIRECT_URL, STATICFILES_DIRS, X_FRAME_OPTIONS
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "mdeditor",
+    "markdownify.apps.MarkdownifyConfig",
     
     "users.apps.UsersConfig",
     "notes.apps.NotesConfig",
@@ -121,6 +123,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = "/static/"
 STATICFILES_DIRS = [BASE_DIR / STATIC_URL]
 
 MEDIA_URL = "media/"
@@ -135,3 +138,58 @@ LOGIN_REDIRECT_URL = "/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+X_FRAME_OPTIONS = "SAMEORIGIN"
+
+MARKDOWNIFY = {
+    "default": {
+        "WHITELIST_TAGS": [
+            'a',
+            'ul',
+            'ol',
+            'h1',
+            'h2',
+            'h3',
+            'h4',
+            'h5',
+            'h6',
+            'strong',
+            'em',
+            'li',
+            'i',
+            'b',
+            
+        ]
+    },
+}
+
+MDEDITOR_CONFIGS = {
+    'default':{
+        'width': '100% ', 
+        'height': 700, 
+        'toolbar': ["undo", "redo", "|",
+                    "bold", "del", "italic", "quote", "ucwords", "uppercase", "lowercase", "|",
+                    "h1", "h2", "h3", "h5", "h6", "|",
+                    "list-ul", "list-ol", "hr", "|",
+                    "link", "reference-link", "image", "code", "preformatted-text", "code-block", "table", "datetime",
+                    "emoji", "html-entities", "pagebreak", "goto-line", "|",
+                    "help", "info",
+                    "||", "preview", "watch", "fullscreen"], 
+        'upload_image_formats': ["jpg", "jpeg", "gif", "png", "bmp", "webp"], 
+        'image_folder': 'static/images', 
+        'theme': 'default',  
+        'preview_theme': 'default', 
+        'editor_theme': 'default',
+        'toolbar_autofixed': True, 
+        'search_replace': True,
+        'emoji': True,  
+        'tex': True,
+        'flow_chart': True,
+        'sequence': True, 
+        'watch': False,
+        'lineWrapping': True, 
+        'lineNumbers': False, 
+        'language': 'en' 
+    }
+    
+}

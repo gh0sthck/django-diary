@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("notes.urls")),
     path("profile/", include("users.urls")),
+    path("mdeditor", include("mdeditor.urls")),
 ]
 
 if settings.DEBUG:
