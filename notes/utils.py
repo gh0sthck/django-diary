@@ -12,5 +12,5 @@ def authenticate_required(func: Callable):
         if args[1].user.is_authenticated:
             return func(*args, **kwargs)
         else:
-            return redirect("auth") 
+            return redirect("login") 
     return wrapper

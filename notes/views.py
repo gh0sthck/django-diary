@@ -33,11 +33,19 @@ class EditNote(UpdateView):
     fields = ["title", "text"]
     template_name = "notes_edit.html"
 
+    @authenticate_required
+    def get(self, request: HttpRequest, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
 
 class CreateNote(CreateView):
     model = Note
     fields = ["title", "text"] 
     template_name = "notes_edit.html"
+
+    @authenticate_required
+    def get(self, request: HttpRequest, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
     @authenticate_required
     def post(self, request: HttpRequest):
