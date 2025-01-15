@@ -11,6 +11,12 @@ from users.models import DiaryUser
 
 class Tag(models.Model):
     name = models.CharField(verbose_name="Название", max_length=80, null=False, unique=True) 
+   
+    def __str__(self) -> str:
+        return self.name
+    
+    def __repr__(self) -> str:
+        return f"<Tag: {self.name}>"
     
     class Meta:
         ordering = ["-name"]
@@ -27,7 +33,7 @@ class Note(models.Model):
     author = models.ForeignKey(
         DiaryUser, on_delete=models.CASCADE, verbose_name="Автор"
     )
-    # tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag)
 
     def get_absolute_url(self):
         return reverse("current_note", kwargs={"slug": self.slug})

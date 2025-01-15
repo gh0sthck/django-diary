@@ -23,9 +23,21 @@
     {% for note in notes %}
         <a class="note__link" href="{% url "current_note" note.slug %}">
         <div class="note">
-            <h3 class="note__title">{{ note.title }}</h3>
-            <p>{{ note.create_date }}</p>
-            <p class="note__description">{{ note.text|truncatechars:"40" }}</p>
+            
+            <div class="note__info">
+                <h3 class="note__title">{{ note.title }}</h3>
+                <p>{{ note.create_date }}</p>
+                <p class="note__description">{{ note.text|truncatechars:"40" }}</p>
+            </div>
+
+            <div class="note__tags">
+                <ul class="tag__list">
+                {% for tag in note.tags.all %}
+                    <li class="tag">{{ tag.name }}</li>
+                {% endfor %}
+                </ul> 
+            </div>
+
         </div> 
             </a>
     {% endfor %}

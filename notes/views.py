@@ -1,13 +1,13 @@
 from django.core.paginator import Paginator
 from django.http import HttpRequest
 from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import DeleteView
 from django.views.generic.edit import UpdateView, CreateView
 
-from notes.forms import NoteForm
-from notes.models import Note
+from notes.forms import CreateTagForm, NoteForm
+from notes.models import Note, Tag
 from notes.utils import authenticate_required
 
 
@@ -38,12 +38,17 @@ class AllUserNotes(View):
         notes_per_page = paginator.get_page(page_number)
         pages = paginator.num_pages
 
-        url = "?notes_sort="+request.GET.get("notes_sort") if request.GET.get("notes_sort") else ""
+        url = (
+            "?notes_sort=" + request.GET.get("notes_sort")
+            if request.GET.get("notes_sort")
+            else ""
+        )
         url += "&page=" if url else "?page="
 
-    
         return render(
-            request, "notes_all.html", {"notes" : notes_per_page, "pages": pages, "url": url }
+            request,
+            "notes_all.html",
+            {"notes": notes_per_page, "pages": pages, "url": url},
         )
 
 
@@ -52,7 +57,11 @@ class CurrentNote(View):
     def get(self, request: HttpRequest, slug: str):
         note = Note.objects.get(slug=slug)
         if note.author == request.user:
-            return render(request, "notes_current.html", {"note": note})
+            return render(
+                request,
+                "notes_current.html",
+                {"note": note, "create_tag_form": CreateTagForm()},
+            )
         return redirect("all_notes")
 
 
@@ -98,3 +107,32 @@ class DeleteNote(DeleteView):
         if request.user == author:
             return super().post(request, *args, **kwargs)
         return redirect("all_notes")
+
+
+class CreateTag(View):
+    @authenticate_required
+    def post(self, request: HttpRequest):
+        form = CreateTagForm(request.POST)
+        note = Note.objects.get(id=request.POST.get("note_id"))
+        if form.is_valid():
+            tag: Tag = form.save()
+            note.tags.add(tag)
+            return redirect("current_note", note.slug)
+        return redirect("current_note", note.slug)
+
+
+class DeleteTag(View):
+    @authenticate_required
+    def post(self, request: HttpRequest):
+        id_ = request.POST.get("tag_pk") 
+        note_id = request.POST.get("note_pk") 
+        
+        note = Note.objects.get(id=note_id)
+        tag = Tag.objects.get(id=id_) 
+        if Note.objects.filter(tags__id=id_).count() == 1:
+            tag.delete()
+            note.tags.remove(tag)
+        else:
+            note.tags.remove(tag) 
+       
+        return redirect("current_note", note.slug)

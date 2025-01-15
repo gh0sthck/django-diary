@@ -7,6 +7,19 @@
 {% block main %}
 <div style="margin-bottom: 20px;" class="current_note__header">
     <h1>{{ note.title }}</h1>
+    <div class="note__tags"> 
+    <ul class="tag__list">
+        {% for tag in note.tags.all %}
+            <li class="tag">{{ tag.name }} <form action={% url "delete_tag" %} method="post">{% csrf_token %} <input type="hidden" name="note_pk" value={{note.pk}}> <input type="hidden" name="tag_pk" value={{tag.pk}}> <input type="submit" value="⨯"></form></li> 
+        {% endfor %}
+    </ul> 
+    </div>
+    <form action={% url "create_tag" %} method="post">
+        {% csrf_token %}
+        {{ create_tag_form.as_p }}
+        <input type="hidden" name="note_id" value="{{ note.pk }}">
+        <input type="submit" value="+" />
+    </form>
     <p style="font-style: italic; font-size: 16px;">Создано: {{ note.create_date }}</p>
     <p style="font-style: italic; font-size: 16px;">Изменено: {{ note.update_date }}</p>
     <a href="{% url "edit_note" note.slug %}">Редактировать</a>
