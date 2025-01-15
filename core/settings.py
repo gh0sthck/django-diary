@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 
-from django.conf.global_settings import LOGIN_REDIRECT_URL, LOGOUT_REDIRECT_URL, STATICFILES_DIRS, X_FRAME_OPTIONS
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "mdeditor",
-    "markdownify.apps.MarkdownifyConfig",
     
     "users.apps.UsersConfig",
     "notes.apps.NotesConfig",
@@ -141,28 +139,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
 
-MARKDOWNIFY = {
-    "default": {
-        "WHITELIST_TAGS": [
-            'a',
-            'ul',
-            'ol',
-            'h1',
-            'h2',
-            'h3',
-            'h4',
-            'h5',
-            'h6',
-            'strong',
-            'em',
-            'li',
-            'i',
-            'b',
-            
-        ]
-    },
-}
-
 MDEDITOR_CONFIGS = {
     'default':{
         'width': '100% ', 
@@ -182,7 +158,7 @@ MDEDITOR_CONFIGS = {
         'editor_theme': 'default',
         'toolbar_autofixed': True, 
         'search_replace': True,
-        'emoji': True,  
+        'emoji': False,  
         'tex': True,
         'flow_chart': True,
         'sequence': True, 

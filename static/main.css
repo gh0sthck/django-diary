@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 
 * {
     list-style: none;
@@ -9,6 +10,32 @@
     color: #1d1d1d;
     font-family: "Roboto Slab", serif;
     font-size: 19px;
+}
+
+a {
+    color: #9379c4;
+    text-decoration-style: dashed;
+}
+
+blockquote {
+    background-color: rgba(213, 202, 235, 0.6);
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.codehilite *, code {
+    font-family: "JetBrains Mono", serif;
+    overflow-y: hidden;
+    font-size: 16px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+.codehilite pre {
+    background-color: rgba(213, 202, 235, 0.3);
+    padding: 20px;
+    border-radius: 10px;
 }
 
 .btn-purple {
@@ -62,13 +89,18 @@
     padding: 30px;
 }
 
+.note:hover {
+    background-color: #c1b2d8 ;
+    transition: .3s;
+}
 
 .note__description {
     font-weight: 300;
     font-style: italic;
 }
 
-.note:hover {
-    background-color: #c1b2d8 ;
-    transition: .3s;
+.current_note__description * {
+    list-style-type: disc;
+    word-wrap: break-word;
 }
+

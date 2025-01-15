@@ -5,15 +5,16 @@
 {% endblock title %}
 
 {% block main %}
-<h1>{{ note.title }}</h1>
-
-<div class="current_note__description">
-    
-    {{ note.text_as_markdown }}
-
+<div style="margin-bottom: 20px;" class="current_note__header">
+    <h1>{{ note.title }}</h1>
+    <p style="font-style: italic; font-size: 16px;">Создано: {{ note.create_date }}</p>
+    <p style="font-style: italic; font-size: 16px;">Изменено: {{ note.update_date }}</p>
+    <a href="{% url "edit_note" note.slug %}">Редактировать</a>
+    <a href="{% url "delete_note" note.slug %}">Удалить</a>
 </div>
 
-<a href="{% url "edit_note" note.slug %}">Редактировать</a>
-<a href="{% url "delete_note" note.slug %}">Удалить</a>
+<div class="current_note__description">
+    {{ note.text_as_markdown }}
+</div>
 
 {% endblock main %}
