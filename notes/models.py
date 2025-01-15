@@ -9,6 +9,15 @@ from notes.utils import SlugFieldExtension
 from users.models import DiaryUser
 
 
+class Tag(models.Model):
+    name = models.CharField(verbose_name="Название", max_length=80, null=False, unique=True) 
+    
+    class Meta:
+        ordering = ["-name"]
+        verbose_name = "Тег"
+        verbose_name_plural = "Теги" 
+
+
 class Note(models.Model):
     title = models.CharField(verbose_name="Заголовок", max_length=80, null=False)
     slug = models.SlugField(verbose_name="Слаг", max_length=128, unique=True)
@@ -18,6 +27,7 @@ class Note(models.Model):
     author = models.ForeignKey(
         DiaryUser, on_delete=models.CASCADE, verbose_name="Автор"
     )
+    # tags = models.ManyToManyField(Tag)
 
     def get_absolute_url(self):
         return reverse("current_note", kwargs={"slug": self.slug})

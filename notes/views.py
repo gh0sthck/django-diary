@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.http import HttpRequest
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
@@ -13,15 +14,37 @@ from notes.utils import authenticate_required
 class AllUserNotes(View):
     @authenticate_required
     def get(self, request: HttpRequest):
-        print(request.GET)
         user_id: int = request.user.id
         match request.GET.get("notes_sort"):
-            case "new": user_notes = Note.objects.order_by("-create_date").filter(author=user_id)
-            case "old": user_notes = Note.objects.order_by("create_date").filter(author=user_id) 
-            case "modify": user_notes = Note.objects.order_by("-update_date").filter(author=user_id) 
-            case "az": user_notes = Note.objects.order_by("title").filter(author=user_id) 
-            case _: user_notes = Note.objects.filter(author=user_id) 
-        return render(request, "notes_all.html", {"notes": user_notes.select_related("author")}) 
+            case "new":
+                user_notes = Note.objects.order_by("-create_date").filter(
+                    author=user_id
+                )
+            case "old":
+                user_notes = Note.objects.order_by("create_date").filter(author=user_id)
+            case "modify":
+                user_notes = Note.objects.order_by("-update_date").filter(
+                    author=user_id
+                )
+            case "az":
+                user_notes = Note.objects.order_by("title").filter(author=user_id)
+            case _:
+                user_notes = Note.objects.filter(author=user_id)
+
+        user_notes = user_notes.select_related("author")
+
+        paginator = Paginator(user_notes, 4)
+        page_number = request.GET.get("page")
+        notes_per_page = paginator.get_page(page_number)
+        pages = paginator.num_pages
+
+        url = "?notes_sort="+request.GET.get("notes_sort") if request.GET.get("notes_sort") else ""
+        url += "&page=" if url else "?page="
+
+    
+        return render(
+            request, "notes_all.html", {"notes" : notes_per_page, "pages": pages, "url": url }
+        )
 
 
 class CurrentNote(View):
@@ -31,7 +54,7 @@ class CurrentNote(View):
         if note.author == request.user:
             return render(request, "notes_current.html", {"note": note})
         return redirect("all_notes")
-    
+
 
 class EditNote(UpdateView):
     model = Note
@@ -46,7 +69,7 @@ class EditNote(UpdateView):
 
 class CreateNote(CreateView):
     model = Note
-    fields = ["title", "text"] 
+    fields = ["title", "text"]
     template_name = "notes_edit.html"
 
     @authenticate_required
@@ -59,7 +82,7 @@ class CreateNote(CreateView):
         if form.is_valid():
             data = form.save(commit=False)
             data.author = request.user
-            data.save() 
+            data.save()
             return redirect("all_notes")
 
 

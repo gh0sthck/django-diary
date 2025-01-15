@@ -29,6 +29,10 @@
         </div> 
             </a>
     {% endfor %}
+
+    {% with current_page=notes pages=pages url=url %}
+        {% include "pagination.html" %} 
+    {% endwith %}
 </div>
 
 {% endblock main %}

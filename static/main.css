@@ -127,3 +127,38 @@ blockquote {
     word-wrap: break-word;
 }
 
+.paginator {
+    margin-top: 30px;
+    /* border: 1px solid red; */
+    display: flex;
+    justify-content: center;
+}
+
+.paginator__element {
+    border: 2px solid #9379c4;
+    padding: 3px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    margin-left: 8px;
+}
+
+.paginator__element-inactive {
+    border: 2px solid #9379c4;
+    padding: 3px 12px;
+    border-radius: 6px;
+    background-color: #9379c4;
+    color: #fff;
+    margin-left: 8px;
+}
+
+.paginator__element:hover {
+    transition: .3s;
+    background-color: #9379c4;
+    color: #fff;
+}
+
+.more {
+    margin-left: 9px;
+    letter-spacing: 2px;
+    color: #9379c4;
+}
