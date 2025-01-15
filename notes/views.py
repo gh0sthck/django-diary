@@ -13,9 +13,15 @@ from notes.utils import authenticate_required
 class AllUserNotes(View):
     @authenticate_required
     def get(self, request: HttpRequest):
+        print(request.GET)
         user_id: int = request.user.id
-        user_notes = Note.objects.filter(author=user_id).select_related("author") 
-        return render(request, "notes_all.html", {"notes": user_notes}) 
+        match request.GET.get("notes_sort"):
+            case "new": user_notes = Note.objects.order_by("-create_date").filter(author=user_id)
+            case "old": user_notes = Note.objects.order_by("create_date").filter(author=user_id) 
+            case "modify": user_notes = Note.objects.order_by("-update_date").filter(author=user_id) 
+            case "az": user_notes = Note.objects.order_by("title").filter(author=user_id) 
+            case _: user_notes = Note.objects.filter(author=user_id) 
+        return render(request, "notes_all.html", {"notes": user_notes.select_related("author")}) 
 
 
 class CurrentNote(View):

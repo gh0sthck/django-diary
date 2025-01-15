@@ -9,6 +9,15 @@
 <h1 class="title">Ваши записи, {{ user.username }}</h1>
 <div class="d-grid gap-1">
     <a class="btn btn-purple" href="{% url "create_note" %}">Создать запись</a>
+    <form method="get">
+        <select name="notes_sort" id="m">
+            <option value="new">Новые</option>
+            <option value="old">Старые</option>
+            <option value="modify">По дате изменения</option>
+            <option value="az">A-z</option>
+        </select>
+        <input type="submit" value="confirm">
+    </form>
 </div>
 <div class="notes">
     {% for note in notes %}

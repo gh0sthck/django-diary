@@ -12,6 +12,12 @@
     font-size: 19px;
 }
 
+html, body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 a {
     color: #9379c4;
     text-decoration-style: dashed;
@@ -67,6 +73,23 @@ blockquote {
     height: 90px;
     background-color: #f3f3f3;
     margin-bottom: 30px;
+}
+
+.main {
+    margin-bottom: 30px;
+}
+
+.footer {
+    background-color: #f3f3f3;
+    height: 90px;
+    margin-top: auto;
+}
+
+.footer .footer__list {
+    display: flex;
+    height: 90px;
+    justify-content: space-between;
+    align-items: center; 
 }
 
 .header .nav__list {
