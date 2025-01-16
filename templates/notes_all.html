@@ -9,6 +9,8 @@
 <h1 class="title">Ваши записи, {{ user.username }}</h1>
 <div class="d-grid gap-1">
     <a class="btn btn-purple" href="{% url "create_note" %}">Создать запись</a>
+</div>
+{% if notes %}
     <form method="get">
         <select name="notes_sort" id="m">
             <option value="new">Новые</option>
@@ -18,7 +20,6 @@
         </select>
         <input type="submit" value="confirm">
     </form>
-</div>
 <div class="notes">
     {% for note in notes %}
         <a class="note__link" href="{% url "current_note" note.slug %}">
@@ -46,5 +47,11 @@
         {% include "pagination.html" %} 
     {% endwith %}
 </div>
+{% else %}
+
+<h3>У вас еще нет записей...</h3>
+
+{% endif %}
+
 
 {% endblock main %}

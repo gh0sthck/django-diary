@@ -1,10 +1,8 @@
 from django.core.paginator import Paginator
 from django.http import HttpRequest
 from django.shortcuts import redirect, render
-from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import DeleteView
-from django.views.generic.edit import UpdateView, CreateView
+from django.views.generic.edit import CreateView
 
 from notes.forms import CreateTagForm, NoteForm
 from notes.models import Note, Tag
@@ -55,8 +53,9 @@ class AllUserNotes(View):
 class CurrentNote(View):
     @authenticate_required
     def get(self, request: HttpRequest, slug: str):
-        note = Note.objects.get(slug=slug)
-        if note.author == request.user:
+        note = Note.objects.filter(slug=slug, author=request.user.id)
+        if note:
+            note = note[0]
             return render(
                 request,
                 "notes_current.html",
@@ -65,15 +64,26 @@ class CurrentNote(View):
         return redirect("all_notes")
 
 
-class EditNote(UpdateView):
-    model = Note
-    form = NoteForm
-    fields = ["title", "text"]
-    template_name = "notes_edit.html"
+class EditNote(View):
+    @authenticate_required
+    def get(self, request: HttpRequest, slug: str):
+        note = Note.objects.filter(slug=slug, author=request.user.id)
+        if note:
+            return render(
+                request, "notes_edit.html", {"form": NoteForm(note[0].__dict__)}
+            )
 
     @authenticate_required
-    def get(self, request: HttpRequest, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+    def post(self, request: HttpRequest, slug: str):
+        form = NoteForm(request.POST)
+        if form.is_valid():
+            if note := Note.objects.filter(author=request.user.id, slug=slug):
+                note: Note = note[0]
+
+                note.title = form.cleaned_data["title"]
+                note.text = form.cleaned_data["text"]
+                note.save()
+                return redirect("current_note", note.slug)
 
 
 class CreateNote(CreateView):
@@ -95,17 +105,19 @@ class CreateNote(CreateView):
             return redirect("all_notes")
 
 
-class DeleteNote(DeleteView):
-    model = Note
-    success_url = reverse_lazy("all_notes")
-    template_name = "note_delete.html"
-    context_object_name = "note"
+class DeleteNote(View):
+    @authenticate_required
+    def get(self, request: HttpRequest, slug: str):
+        note = Note.objects.filter(author=request.user.id, slug=slug)
+        if note:
+            note = note[0]
+            return render(request, "notes_delete.html", {"note": note})
+        return redirect("all_notes")
 
     @authenticate_required
-    def post(self, request: HttpRequest, *args, **kwargs):
-        author = self.get_object().author
-        if request.user == author:
-            return super().post(request, *args, **kwargs)
+    def post(self, request: HttpRequest, slug: str):
+        note = Note.objects.filter(slug=slug, author=request.user.id)
+        note.delete()
         return redirect("all_notes")
 
 
@@ -115,8 +127,10 @@ class CreateTag(View):
         form = CreateTagForm(request.POST)
         note = Note.objects.get(id=request.POST.get("note_id"))
         if form.is_valid():
-            tag: Tag = form.save()
-            note.tags.add(tag)
+            tag: Tag = form.save(commit=False)
+            if tag.name not in list(tag.name for tag in note.tags.iterator()):
+                tag: Tag = form.save()
+                note.tags.add(tag)
             return redirect("current_note", note.slug)
         return redirect("current_note", note.slug)
 
@@ -124,15 +138,15 @@ class CreateTag(View):
 class DeleteTag(View):
     @authenticate_required
     def post(self, request: HttpRequest):
-        id_ = request.POST.get("tag_pk") 
-        note_id = request.POST.get("note_pk") 
-        
+        id_ = request.POST.get("tag_pk")
+        note_id = request.POST.get("note_pk")
+
         note = Note.objects.get(id=note_id)
-        tag = Tag.objects.get(id=id_) 
+        tag = Tag.objects.get(id=id_)
         if Note.objects.filter(tags__id=id_).count() == 1:
             tag.delete()
             note.tags.remove(tag)
         else:
-            note.tags.remove(tag) 
-       
+            note.tags.remove(tag)
+
         return redirect("current_note", note.slug)

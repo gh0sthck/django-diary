@@ -10,7 +10,7 @@ from users.models import DiaryUser
 
 
 class Tag(models.Model):
-    name = models.CharField(verbose_name="Название", max_length=80, null=False, unique=True) 
+    name = models.CharField(verbose_name="Название", max_length=80, null=False) 
    
     def __str__(self) -> str:
         return self.name
@@ -26,7 +26,7 @@ class Tag(models.Model):
 
 class Note(models.Model):
     title = models.CharField(verbose_name="Заголовок", max_length=80, null=False)
-    slug = models.SlugField(verbose_name="Слаг", max_length=128, unique=True)
+    slug = models.SlugField(verbose_name="Слаг", max_length=128)
     create_date = models.DateTimeField(verbose_name="Дата создания", auto_now_add=True)
     text = MDTextField(verbose_name="Текст записи", null=True, blank=True)
     update_date = models.DateTimeField(verbose_name="Время обновления", auto_now=True)
