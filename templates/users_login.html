@@ -6,7 +6,7 @@
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Войти">    
+    <input class="btn btn-outline-purple" type="submit" value="Войти">    
 </form>
 <p>Нет аккаунта? <a href="{% url "register" %}">Зарегестрироваться</a>!</p>
 {% endblock main %}

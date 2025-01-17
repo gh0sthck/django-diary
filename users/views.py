@@ -5,7 +5,6 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic.edit import FormView
 
-from notes.utils import authenticate_required
 from users.forms import RegisterForm
 from users.models import DiaryUser
 
