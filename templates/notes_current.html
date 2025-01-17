@@ -12,7 +12,18 @@
         {% for tag in note.tags.all %}
             <li class="tag">{{ tag.name }} <form action={% url "delete_tag" %} method="post">{% csrf_token %} <input type="hidden" name="note_pk" value={{note.pk}}> <input type="hidden" name="tag_pk" value={{tag.pk}}> <input type="submit" value="⨯"></form></li> 
         {% endfor %}
-    </ul> 
+    </ul>
+    <form action={% url "create_tag" %} method="post">
+        {% csrf_token %}
+        <input type="hidden" name="note_id" value="{{ note.pk }}">
+        <select name="name" id="et">
+            {% for tag2 in all_tags %}
+                <option name="name" value="{{ tag2.name }}">{{ tag2.name }}</option> 
+            {% endfor %}
+        </select>
+        <input type="submit" value="Добавить">
+    </form>
+    
     </div>
     <form action={% url "create_tag" %} method="post">
         {% csrf_token %}

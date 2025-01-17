@@ -56,10 +56,11 @@ class CurrentNote(View):
         note = Note.objects.filter(slug=slug, author=request.user.id)
         if note:
             note = note[0]
+            tags = Tag.objects.filter(note__author=request.user).exclude(note__id=note.id)
             return render(
                 request,
                 "notes_current.html",
-                {"note": note, "create_tag_form": CreateTagForm()},
+                {"note": note, "create_tag_form": CreateTagForm(), "all_tags": tags},
             )
         return redirect("all_notes")
 
@@ -128,8 +129,12 @@ class CreateTag(View):
         note = Note.objects.get(id=request.POST.get("note_id"))
         if form.is_valid():
             tag: Tag = form.save(commit=False)
+            tags = Tag.objects.filter(note__author=request.user.id) 
+            if tag.name not in list(tag.name for tag in tags):
+                tag.save() 
+            else:
+                tag = Tag.objects.filter(note__author=request.user.id, name=tag.name)[0] 
             if tag.name not in list(tag.name for tag in note.tags.iterator()):
-                tag: Tag = form.save()
                 note.tags.add(tag)
             return redirect("current_note", note.slug)
         return redirect("current_note", note.slug)
