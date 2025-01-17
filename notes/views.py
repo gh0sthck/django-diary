@@ -13,40 +13,51 @@ class AllUserNotes(View):
     @authenticate_required
     def get(self, request: HttpRequest):
         user_id: int = request.user.id
+        user_notes = Note.objects 
+        url = ""
+        
+        if request.GET.get("notes_sort_tag") or request.GET.get("old_query"):
+            tag_sort = request.GET.get("notes_sort_tag") if request.GET.get("notes_sort_tag") else request.GET.get("old_query")
+            user_notes = user_notes.filter(tags__name=tag_sort)
+            url = "?notes_sort_tag=" + tag_sort
+        
         match request.GET.get("notes_sort"):
             case "new":
-                user_notes = Note.objects.order_by("-create_date").filter(
+                user_notes = user_notes.order_by("-create_date").filter(
                     author=user_id
                 )
             case "old":
-                user_notes = Note.objects.order_by("create_date").filter(author=user_id)
+                user_notes = user_notes.order_by("create_date").filter(author=user_id)
             case "modify":
-                user_notes = Note.objects.order_by("-update_date").filter(
+                user_notes = user_notes.order_by("-update_date").filter(
                     author=user_id
                 )
             case "az":
-                user_notes = Note.objects.order_by("title").filter(author=user_id)
+                user_notes = user_notes.order_by("title").filter(author=user_id)
             case _:
-                user_notes = Note.objects.filter(author=user_id)
+                user_notes = user_notes.filter(author=user_id)
 
         user_notes = user_notes.select_related("author")
+
+        tags = Tag.objects.filter(note__author=request.user).distinct()
 
         paginator = Paginator(user_notes, 4)
         page_number = request.GET.get("page")
         notes_per_page = paginator.get_page(page_number)
         pages = paginator.num_pages
 
-        url = (
-            "?notes_sort=" + request.GET.get("notes_sort")
-            if request.GET.get("notes_sort")
-            else ""
-        )
+        if request.GET.get("notes_sort"):
+            if url:
+                url += "&notes_sort=" + request.GET.get("notes_sort")
+            else:
+                url = "?notes_sort=" + request.GET.get("notes_sort")
+        
         url += "&page=" if url else "?page="
 
         return render(
             request,
             "notes_all.html",
-            {"notes": notes_per_page, "pages": pages, "url": url},
+            {"notes": notes_per_page, "pages": pages, "url": url, "tags": tags},
         )
 
 
@@ -56,7 +67,11 @@ class CurrentNote(View):
         note = Note.objects.filter(slug=slug, author=request.user.id)
         if note:
             note = note[0]
-            tags = Tag.objects.filter(note__author=request.user).exclude(note__id=note.id)
+            tags = (
+                Tag.objects.filter(note__author=request.user)
+                .exclude(note__id=note.id)
+                .distinct()
+            )
             return render(
                 request,
                 "notes_current.html",
@@ -129,11 +144,11 @@ class CreateTag(View):
         note = Note.objects.get(id=request.POST.get("note_id"))
         if form.is_valid():
             tag: Tag = form.save(commit=False)
-            tags = Tag.objects.filter(note__author=request.user.id) 
+            tags = Tag.objects.filter(note__author=request.user.id)
             if tag.name not in list(tag.name for tag in tags):
-                tag.save() 
+                tag.save()
             else:
-                tag = Tag.objects.filter(note__author=request.user.id, name=tag.name)[0] 
+                tag = Tag.objects.filter(note__author=request.user.id, name=tag.name)[0]
             if tag.name not in list(tag.name for tag in note.tags.iterator()):
                 note.tags.add(tag)
             return redirect("current_note", note.slug)

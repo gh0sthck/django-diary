@@ -18,6 +18,17 @@
             <option value="modify">По дате изменения</option>
             <option value="az">A-z</option>
         </select>
+        {% if request.GET.notes_sort_tag %}
+             <input type="hidden" name="old_query" value={{ request.GET.notes_sort_tag }}> 
+        {% endif %}
+        <input type="submit" value="confirm">
+    </form>
+    <form method="get">
+        <select name="notes_sort_tag" id="m">
+            {% for tag in tags  %}
+                <option value="{{ tag.name }}">{{ tag.name }}</option> 
+            {% endfor %}
+        </select>
         <input type="submit" value="confirm">
     </form>
 <div class="notes">
