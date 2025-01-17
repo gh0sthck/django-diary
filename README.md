@@ -1,16 +1,17 @@
 # django-diary
-Проект на Django 5, который представляет из себя сайт для ведения заметок, то есть, дневник (хотя цель
-использования зависит от каждого). Польователь может войти или зарегестрироваться, в то же время, без регистрации и 
-наличия аккаунта, пользователь не может пользоваться какими-либо частями сайта. 
-Данные (записи) одних пользователей не доступны для просмотра и изменения другими пользователями: каждый пользователь имеет свои собственные
-записи, может их редактировать и удалять, но не может просматривать записи других пользователей. 
+A project in Django 5, which is a site for taking notes, that is, a diary (although the purpose of 
+use depends on each person). The user can log in or register, but at the same time, without registering 
+and having an account, the user cannot use any parts of the site. The data (note) of some users
+are not available for viewing and modification by other users: each user has his own notes, can
+edit and delete them, but cannot view the notes of other users.
 
-## Тег-система
-Каждую запись можно пометить тегом, обозначив предположительную тему и содержимое записи. Запись может содержать
-неограниченное количество тегов, однако не может содержать повторяющиеся.
+## Tag-system
+Each note can be tagged to indicate the intended topic and content of the entry. An note can
+contain an unlimited number of tags, but cannot contain duplicates.
 
-## Стек приложения
+## App tech-stack
 1. Python 3.12
 2. Django 5
 3. Django-MD-editor
-4. PostgreSQL 
+4. Bootstrap 5
+5. PostgreSQL 
