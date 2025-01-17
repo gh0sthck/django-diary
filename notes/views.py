@@ -16,8 +16,8 @@ class AllUserNotes(View):
         user_notes = Note.objects 
         url = ""
         
-        if request.GET.get("notes_sort_tag") or request.GET.get("old_query"):
-            tag_sort = request.GET.get("notes_sort_tag") if request.GET.get("notes_sort_tag") else request.GET.get("old_query")
+        if request.GET.get("notes_sort_tag"):
+            tag_sort = request.GET.get("notes_sort_tag")
             user_notes = user_notes.filter(tags__name=tag_sort)
             url = "?notes_sort_tag=" + tag_sort
         

@@ -15,3 +15,4 @@ class CreateTagForm(forms.ModelForm):
     class Meta:
         model = Tag
         fields = ["name"]
+        widgets = {"name": forms.TextInput(attrs={"placeholder": "Название"})}

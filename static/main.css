@@ -51,6 +51,7 @@ blockquote {
 }
 
 .btn-purple:hover {
+    transition: .3s;
     border: 1px solid #9379c4;
     background: none;
     color: #9379c4;
@@ -100,7 +101,6 @@ blockquote {
 }
 
 .note__link {
-    max-width: 900px;
     display: block;
     margin-top: 30px;
     text-decoration: none;
@@ -175,7 +175,7 @@ blockquote {
     height: 100%;
     display: flex;
     flex-wrap: wrap;
-    word-break: break-all; 
+    word-break: break-all;
 }
 
 .tag {
@@ -194,8 +194,85 @@ blockquote {
     font-size: 14px;
     background-color: rgba(147, 120, 196, 0.3);
     border-radius: 30px;
-    /* margin-left: 3px; */
-
     margin-top: 10px;
-    /* height: fit-content; */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 3px;
+}
+
+.tag2 form {
+    display: flex;
+    align-items: center;
+}
+
+.delete_tag {
+    margin-left: 5px;
+    border-radius: 100%;
+    padding: 0px 4px;
+    font-size: 10px;
+}
+
+.create_tag_form {
+    display: inline-flex;
+    justify-content: left;
+    margin-left: 3px;
+    align-items: center;
+    font-size: 14px;
+    margin-top: 10px;
+    height: fit-content;
+}
+
+
+.create_tag_form * {
+    margin: 0;
+}
+
+.create_tag_form label {
+    display: none;
+}
+
+.create_tag_form #id_name {
+    background-color: rgba(147, 120, 196, 0.3);
+    padding: 3px 10px;
+    font-size: 14px;
+    border-radius: 30px;
+}
+
+.add_tag_btn {
+    margin-left: 6px;
+    border-radius: 100%;
+    padding: 0px 6px;
+    font-size: 13px;
+}
+
+.create_tag_form #id_name:focus {
+    outline: none;
+    border: none;
+    box-shadow: none;
+}
+
+.select_form {
+    margin-bottom: 10px;
+}
+
+.select_btn {
+    border: 1px solid transparent;
+    padding: 3px 15px;
+    border-radius: 30px;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.select {
+    border-radius: 10px;
+    font-size: 16px;
+    margin-right: 10px;
+    padding: 12px 20px;
+}
+
+.sort {
+    display: flex;
+    margin-top: 20px;
+    justify-content: space-around;
 }
