@@ -104,8 +104,8 @@ class EditNote(View):
 
 class CreateNote(CreateView):
     model = Note
-    fields = ["title", "text"]
     template_name = "notes_edit.html"
+    form_class = NoteForm
 
     @authenticate_required
     def get(self, request: HttpRequest, *args, **kwargs):
