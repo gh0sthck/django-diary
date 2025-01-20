@@ -1,23 +1,4 @@
 services:
-  django:
-    build: .
-    ports:
-      - 8000:8000
-    environment:
-      - DB_USER=root
-      - DB_PASSWD=root
-      - DB_HOST=postgres
-      - DB_DATABASE=diary
-      - EMAIL_HOST_USER=mymail@gmail.com
-      - EMAIL_HOST_PASSWORD=password
-    volumes:
-      - ./:/diary/
-    restart: always
-    tty: true 
-    container_name: django
-    depends_on:
-      - postgres
-
   postgres:
     container_name: postgres
     image: postgres:17.2-alpine
@@ -31,6 +12,56 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data/pgdata
 
+  django:
+    build: .
+    ports:
+      - 8000:8000
+    environment:
+      - DB_USER=root
+      - DB_PASSWD=root
+      - DB_HOST=postgres
+      - DB_DATABASE=diary
+      - EMAIL_HOST_USER=yourmail@mail.com
+      - EMAIL_HOST_PASSWORD=smthpasswd
+    volumes:
+      - ./:/diary/
+    restart: always
+    tty: true 
+    container_name: django
+    depends_on:
+      - postgres
+
+  redis:
+    container_name: redis
+    image: redis:8.0-M02-alpine
+    volumes:
+      - ./:/diary/
+    ports:
+      - 6379:6379
+    environment:
+      - REDIS_PASSWORD=root
+      - REDIS_USER=root
+      - REDIS_USER_PASSWORD=root
+
+  celery:
+    container_name: celery
+    build: .
+    tty: true
+    restart: always
+    command: celery -A core worker -l INFO -E
+    volumes:
+      - ./:/diary/
+    environment:
+      - DB_USER=root
+      - DB_PASSWD=root
+      - DB_HOST=postgres
+      - DB_DATABASE=diary
+      - EMAIL_HOST_USER=yourmail@mail.com
+      - EMAIL_HOST_PASSWORD=smthpasswd
+    depends_on:
+      - django
+      - postgres
+      - redis
 
 volumes:
   pgdata:

@@ -8,7 +8,10 @@ class NoteForm(forms.ModelForm):
     class Meta:
         model = Note
         fields = ["title", "text"]
-        widgets = {"text": MDEditorWidget, "title": forms.TextInput(attrs={"class": "form-control"})}
+        widgets = {
+            "text": MDEditorWidget,
+            "title": forms.TextInput(attrs={"class": "form-control"}),
+        }
 
 
 class CreateTagForm(forms.ModelForm):

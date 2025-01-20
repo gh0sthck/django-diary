@@ -4,12 +4,12 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic.edit import FormView
-from django_email_verification import send_email, send_password
 
 from notes.utils import authenticate_required
 from users.forms import RegisterForm
 from users.models import DiaryUser
-from users.utils import send_change_email, token_valid
+from users.tasks import celery_send_change_email, celery_send_email, celery_send_password
+from users.utils import token_valid
 
 
 class RegisterView(FormView):
@@ -37,28 +37,28 @@ class ProfileSettingsView(View):
         return render(request, "users_settings.html")
 
 
-class EmailVerify(View):
+class EmailVerifyView(View):
     @authenticate_required
     def get(self, request: HttpRequest):
-        send_email(request.user)
+        celery_send_email(request.user.pk) 
         return render(request, "email_verify.html")
 
 
-class PasswordChange(View):
+class PasswordChangeView(View):
     @authenticate_required
     def get(self, request: HttpRequest):
-        send_password(request.user)
+        celery_send_password.delay(request.user.pk) 
         return render(request, "password_email_sent.html")
 
 
-class EmailChange(View):
+class EmailChangeView(View):
     @authenticate_required
     def get(self, request: HttpRequest):
-        send_change_email(request.user)
+        celery_send_change_email.delay(request.user.pk)
         return render(request, "email_change_email_sent.html")
 
 
-class EmailChanged(View):
+class EmailChangedView(View):
     @authenticate_required
     def get(self, request: HttpRequest, token: str):
         return render(request, "email_change_template.html")

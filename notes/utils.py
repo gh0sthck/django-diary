@@ -1,34 +1,40 @@
-from typing import Callable
+from typing import Callable, Optional
 
 from django.shortcuts import redirect
-from django.urls import reverse
-import markdown
-from markdown.inlinepatterns import LinkInlineProcessor, LINK_RE
+
+from .models import Note
+
 
 def authenticate_required(func: Callable):
     """
     I create new auth decorator, because django decorator `login_required`
     not normal work for my CBV views.
-    """ 
+    """
+
     def wrapper(*args, **kwargs):
         if args[1].user.is_authenticated:
             return func(*args, **kwargs)
         else:
-            return redirect("login") 
+            return redirect("login")
+
     return wrapper
 
 
-class SlugFieldLinkInlineProcessor(LinkInlineProcessor):
-    def getLink(self, data, index):
-        href, title, index, handled = super().getLink(data, index)
-        if href.startswith("slug"):
-            slug = href.split(":")[1]
-            href = reverse("current_note", args=[slug])
-        return href, title, index, handled
-    
+def email_verified_required(func: Callable):
+    def wrapper(*args, **kwargs):
+        if args[1].user.is_verified:
+            return func(*args, **kwargs)
+        return redirect("profile_settings")
 
-class SlugFieldExtension(markdown.Extension):
-    def extendMarkdown(self, md):
-        md.inlinePatterns.register(
-            SlugFieldLinkInlineProcessor(LINK_RE, md), "link", 160
-        )
+    return wrapper
+
+
+def get_note(slug: str, author_id: int) -> Optional[Note]:
+    """Return note by slug and user id with orm optimezed query."""
+
+    note = (
+        Note.objects.filter(slug=slug, author=author_id)
+        .select_related("author")
+        .prefetch_related("tags")
+    )
+    return note[0] if note else None

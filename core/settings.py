@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
+from typing import Any
 
 from dotenv import load_dotenv
 
@@ -186,12 +187,10 @@ MDEDITOR_CONFIGS = {
 
 def email_verified_callback(user):
     user.is_verified = True
-    return user
 
 
-def password_change_callback(user, new_password):
+def password_change_callback(user, new_password: Any | str):
     user.set_password(new_password)
-    return user
 
 
 TOKEN_LIFE = 60 * 1  # 1 minute
@@ -202,7 +201,6 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = True
-
 
 EMAIL_FROM_ADDRESS = EMAIL_HOST_USER
 EMAIL_PAGE_DOMAIN = 'http://localhost:8000/'
@@ -224,3 +222,10 @@ EMAIL_PASSWORD_PAGE_TEMPLATE = 'password_changed_template.html'
 EMAIL_PASSWORD_CHANGE_PAGE_TEMPLATE = 'password_change_template.html'
 EMAIL_PASSWORD_CALLBACK = password_change_callback
 
+
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_TIME_LIMIT = TOKEN_LIFE
+CELERY_BROKER_URL = "redis://redis:6379/0"
+CELERY_RESULT_BACKEND = "redis://redis:6379/0"
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+CELERY_TASK_SERIALIZER = "json"

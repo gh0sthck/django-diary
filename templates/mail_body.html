@@ -1,8 +1,35 @@
-<div>
-    <h1>Здравствуйте, уважаемый {{ user.username}}!</h1>
-    <p>
-        Данное сообщение отправлено сервисом DjangoDiary для подтверждения вашей почты.
-        Чтобы подтвердить ее, перейдите по <a href="{{ link }}">ссылке</a>. Если вы не производили никаких действий
-        со своим аккаунтом, либо не имеете к сервису никакого отношения - проигнорируйте письмо.
-    </p>
-</div>
+<html>
+    <head>
+        <style>
+            .title {
+                font-size: 25px;
+                text-align: center;
+                font-weight: 700;
+                color: #9379c4; 
+            }
+            .link {
+                color: #9379c4;
+                text-decoration-style: dashed;
+            }
+            .text {
+                font-size: 19px;
+                text-align: center;
+            }
+            .content {
+                border: 2px solid #9379c4;
+                border-radius: 15px;
+                padding: 20px;
+            }
+    </style>
+    </head>
+    <body>
+        <div class="content">
+            <h1 class="title">Здравствуйте, уважаемый {{ user.username}}!</h1>
+            <p class="text">
+                Данное сообщение отправлено сервисом DjangoDiary для подтверждения вашей почты.
+                Чтобы подтвердить ее, перейдите по <a class="link" href="{{ link }}">ссылке</a>. Если вы не производили никаких действий
+                со своим аккаунтом, либо не имеете к сервису никакого отношения - проигнорируйте письмо.
+            </p>
+        </div>
+    </body>
+</html>

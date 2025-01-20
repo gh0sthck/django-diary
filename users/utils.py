@@ -1,11 +1,12 @@
 import datetime
 import time
+import jwt
+
 from typing import Optional
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.urls import reverse
-import jwt
 
 
 def encode_token(user) -> str:

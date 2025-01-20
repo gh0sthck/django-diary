@@ -7,9 +7,15 @@
 {% block main %}
 
 <h1 class="title">Ваши записи, {{ user.username }}</h1>
-<div class="d-grid gap-1">
-    <a class="btn btn-purple" href="{% url "create_note" %}">Создать запись</a>
-</div>
+
+{% if request.user.is_verified %}
+    <div class="d-grid gap-1">
+        <a class="btn btn-purple" href="{% url "create_note" %}">Создать запись</a>
+    </div>
+{% else %}
+    <p>Подтвердите почту, чтобы создавать записи.</p>
+{% endif %}
+
 {% if notes %}
     <div class="sort">
         <form method="get">
@@ -24,49 +30,47 @@
             {% endif %}
             <input class="btn btn-purple" type="submit" value="Выбрать">
         </form>
-        <form method="get">
-            <select class="select" name="notes_sort_tag" id="m">
-                {% for tag in tags  %}
-                    <option value="{{ tag.name }}" {% if request.GET.notes_sort_tag == tag.name %} selected {% endif %}>{{ tag.name }}</option> 
-                {% endfor %}
-            </select>
-            <input class="btn btn-purple" type="submit" value="Выбрать">
-        </form>
+        {% if tags %}
+            <form method="get">
+                <select class="select" name="notes_sort_tag" id="m">
+                    {% for tag in tags  %}
+                        <option value="{{ tag.name }}" {% if request.GET.notes_sort_tag == tag.name %} selected {% endif %}>{{ tag.name }}</option> 
+                    {% endfor %}
+                </select>
+                <input class="btn btn-purple" type="submit" value="Выбрать">
+            </form>
+        {% endif %}
     </div>
    
+    <div class="notes">
+        {% for note in notes %}
+            <a class="note__link" href="{% url "current_note" note.slug %}">
+            <div class="note">
+                
+                <div class="note__info">
+                    <h3 class="note__title">{{ note.title }}</h3>
+                    <p>{{ note.create_date }}</p>
+                    <p class="note__description">{{ note.text|truncatechars:"80" }}</p>
+                </div>
 
-<div class="notes">
-    {% for note in notes %}
-        <a class="note__link" href="{% url "current_note" note.slug %}">
-        <div class="note">
-            
-            <div class="note__info">
-                <h3 class="note__title">{{ note.title }}</h3>
-                <p>{{ note.create_date }}</p>
-                <p class="note__description">{{ note.text|truncatechars:"80" }}</p>
-            </div>
+                <div class="note__tags">
+                    <ul class="tag__list">
+                    {% for tag in note.tags.all %}
+                        <li class="tag">{{ tag.name }}</li>
+                    {% endfor %}
+                    </ul> 
+                </div>
 
-            <div class="note__tags">
-                <ul class="tag__list">
-                {% for tag in note.tags.all %}
-                    <li class="tag">{{ tag.name }}</li>
-                {% endfor %}
-                </ul> 
-            </div>
+            </div> 
+                </a>
+        {% endfor %}
 
-        </div> 
-            </a>
-    {% endfor %}
-
-    {% with current_page=notes pages=pages url=url %}
-        {% include "pagination.html" %} 
-    {% endwith %}
-</div>
+        {% with current_page=notes pages=pages url=url %}
+            {% include "pagination.html" %} 
+        {% endwith %}
+    </div>
 {% else %}
-
-<h3>У вас еще нет записей...</h3>
-
+    <h3>У вас еще нет записей...</h3>
 {% endif %}
-
 
 {% endblock main %}

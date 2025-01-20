@@ -5,51 +5,61 @@
 {% endblock title %}
 
 {% block main %}
-<div style="margin-bottom: 20px;" class="current_note__header">
-    <h1>{{ note.title }}</h1>
-    <div class="note__tags"> 
-    <ul class="tag__list">
-        {% for tag in note.tags.all %}
-            <li class="tag2">
-                {{ tag.name }} 
-                <form action={% url "delete_tag" %} method="post">
-                    {% csrf_token %}  
-                    <input type="hidden" name="note_pk" value={{note.pk}}> 
-                    <input type="hidden" name="tag_pk" value={{tag.pk}}>
-                    <input class="delete_tag btn-outline-purple" type="submit" value="✕">
-                </form>
-            </li> 
-        {% endfor %}
-            <li class="li-form">
-                <form class="create_tag_form" action={% url "create_tag" %} method="post">
+    <div style="margin-bottom: 20px;" class="current_note__header">
+        
+        <h1>{{ note.title }}</h1>
+
+        <div class="note__tags"> 
+            
+            <ul class="tag__list">
+                {% for tag in note.tags.all %}
+                    <li class="tag2">
+                        {{ tag.name }} 
+                        <form action={% url "delete_tag" %} method="post">
+                            {% csrf_token %}  
+                            <input type="hidden" name="note_pk" value={{note.pk}}> 
+                            <input type="hidden" name="tag_pk" value={{tag.pk}}>
+                            <input class="delete_tag btn-outline-purple" type="submit" value="✕">
+                        </form>
+                    </li> 
+                {% endfor %}
+                    <li class="li-form">
+                        <form class="create_tag_form" action={% url "create_tag" %} method="post">
+                            {% csrf_token %}
+                            {{ create_tag_form.as_p }}
+                            <input type="hidden" name="note_id" value="{{ note.pk }}">
+                            <input type="submit" class="add_tag_btn btn-outline-purple" value="+" />
+                        </form>
+                    </li>
+            </ul>
+
+            {% if all_tags %} 
+                <form class="select_form" action={% url "create_tag" %} method="post">
                     {% csrf_token %}
-                    {{ create_tag_form.as_p }}
                     <input type="hidden" name="note_id" value="{{ note.pk }}">
-                    <input type="submit" class="add_tag_btn btn-outline-purple" value="+" />
+                    <select class="select_btn" name="name" id="et">
+                        {% for tag2 in all_tags %}
+                            <option name="name" value="{{ tag2.name }}">{{ tag2.name }}</option> 
+                        {% endfor %}
+                    </select>
+                    <input class="select_btn btn-purple" type="submit" value="Добавить">
                 </form>
-            </li>
-    </ul>
-    {% if all_tags %} 
-    <form class="select_form" action={% url "create_tag" %} method="post">
-        {% csrf_token %}
-        <input type="hidden" name="note_id" value="{{ note.pk }}">
-        <select class="select_btn" name="name" id="et">
-            {% for tag2 in all_tags %}
-                <option name="name" value="{{ tag2.name }}">{{ tag2.name }}</option> 
-            {% endfor %}
-        </select>
-        <input class="select_btn btn-purple" type="submit" value="Добавить">
-    </form>
-    {% endif %} 
+            {% endif %} 
+
+        </div>
+
+        <p style="font-style: italic; font-size: 16px;">Создано: {{ note.create_date }}</p>
+        <p style="font-style: italic; font-size: 16px;">Изменено: {{ note.update_date }}</p>
+
+        {% if request.user.is_verified %}
+            <a href="{% url "edit_note" note.slug %}">Редактировать</a>
+            <a href="{% url "delete_note" note.slug %}">Удалить</a>
+        {% else %}
+            <p>Вы должны подтвердить почту, прежде чем редактировать записи</p>
+        {% endif %}
     </div>
-    <p style="font-style: italic; font-size: 16px;">Создано: {{ note.create_date }}</p>
-    <p style="font-style: italic; font-size: 16px;">Изменено: {{ note.update_date }}</p>
-    <a href="{% url "edit_note" note.slug %}">Редактировать</a>
-    <a href="{% url "delete_note" note.slug %}">Удалить</a>
-</div>
 
-<div class="current_note__description">
-    {{ note.text_as_markdown }}
-</div>
-
+    <div class="current_note__description">
+        {{ note.text_as_markdown }}
+    </div>
 {% endblock main %}
