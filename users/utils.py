@@ -25,7 +25,6 @@ def decode_token(token: str) -> Optional[dict]:
     try:
         return jwt.decode(token, settings.SECRET_KEY, "HS256")
     except Exception as ex:
-        print(ex)
         return None
 
 

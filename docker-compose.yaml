@@ -1,0 +1,36 @@
+services:
+  django:
+    build: .
+    ports:
+      - 8000:8000
+    environment:
+      - DB_USER=root
+      - DB_PASSWD=root
+      - DB_HOST=postgres
+      - DB_DATABASE=diary
+      - EMAIL_HOST_USER=mymail@gmail.com
+      - EMAIL_HOST_PASSWORD=password
+    volumes:
+      - ./:/diary/
+    restart: always
+    tty: true 
+    container_name: django
+    depends_on:
+      - postgres
+
+  postgres:
+    container_name: postgres
+    image: postgres:17.2-alpine
+    environment:
+      - POSTGRES_DB=diary
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - PGDATA=/var/lib/posgresql/data/pgdata
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data/pgdata
+
+
+volumes:
+  pgdata:
