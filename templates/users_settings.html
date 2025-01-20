@@ -5,12 +5,21 @@
 {% endblock title %}
 
 {% block main %}
+{% if request.user.is_verified %}
 <p>
-    <a href="#">Сменить пароль</a>
+    <a href="{% url "change_passwd" %}">Сменить пароль</a>
 </p>
+{% endif %}
+
 <p>
-    <a href="#">Сменить почту</a>
+    <a href="{% url "change_email" %}">Сменить почту</a>
 </p>
+
+{% if not request.user.is_verified %}
+<p>
+    <a style="color: red; font-weight: 700;" href="{% url "email_verify" %}">Подтвердить почту</a>
+</p>
+{% endif %}
 
 <h2>Возможности оформления</h2>
 <hr>
@@ -25,7 +34,7 @@
     редактора.
 </p>
 <p>
-    <code>[link_text](slug:url)</code> - позволяет делать ссылки на другие ваши записи. <code>[toc]</code> - создает
+    <code>[link_text](slug:url)</code> - позволяет делать ссылки на другие ваши записи. <code>[TOC]</code> - создает
     оглавление записи.
 </p>
 {% endblock main %}

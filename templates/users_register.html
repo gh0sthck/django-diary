@@ -5,6 +5,9 @@
 {% endblock title %}
 
 {% block main %}
+<h1>Регистрация</h1>
+<hr>
+
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}

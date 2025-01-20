@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}
+Успех!
+{% endblock title %}
+
+{% block main %}
+{% if success %}
+<h3>Поздравляем, почта успешно подтверждена!</h3>
+<p>
+    Перейдите по <a href="{% url "all_notes" %}">ссылке</a>, чтобы начать создавать записи!
+</p>
+{% else %}
+<h3>Ошибка: токен просрочен :(</h3>
+{% endif %}
+{% endblock main %}

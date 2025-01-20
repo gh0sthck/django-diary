@@ -24,6 +24,7 @@ urlpatterns = [
     path("", include("notes.urls")),
     path("profile/", include("users.urls")),
     path("mdeditor/", include("mdeditor.urls")),
+    path("verify/", include("django_email_verification.urls")),
 ]
 
 if settings.DEBUG:
