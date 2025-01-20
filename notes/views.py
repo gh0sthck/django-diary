@@ -91,6 +91,7 @@ class EditNote(View):
 
     @authenticate_required
     def post(self, request: HttpRequest, slug: str):
+        print(request.FILES, "\n", request.POST, "\n", request.GET)
         form = NoteForm(request.POST)
         if form.is_valid():
             if note := Note.objects.filter(author=request.user.id, slug=slug):

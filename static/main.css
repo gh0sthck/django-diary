@@ -18,6 +18,11 @@ html, body {
     flex-direction: column;
 }
 
+img {
+    max-width: 70%;
+    max-height: 55%;
+}
+
 a {
     color: #9379c4;
     text-decoration-style: dashed;
